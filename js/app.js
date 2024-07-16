@@ -1,9 +1,7 @@
-
-$(document).ready(() => 
-   {
-      $(".main-loader").css("display", "none");
-      $("body").css("overflow", "auto");
-  })
+$(document).ready(() => {
+  $(".main-loader").css("display", "none");
+  $("body").css("overflow", "auto");
+});
 
 class Customer {
   constructor(id, name) {
@@ -52,6 +50,11 @@ class DataService {
     try {
       const response = await fetch('https://6694c0494bd61d8314c87470.mockapi.io/api/Data/transactions');
       const data = await response.json();
+
+      if (!data.customers || !data.transactions) {
+        throw new Error('Invalid API response structure');
+      }
+
       this.customers = data.customers.map(({ id, name }) => new Customer(id, name));
       this.transactions = data.transactions.map(({ id, customer_id, date, amount }) => new Transaction(id, customer_id, date, amount));
     } catch (error) {
@@ -59,6 +62,10 @@ class DataService {
       this.customers = fallbackData.customers.map(({ id, name }) => new Customer(id, name));
       this.transactions = fallbackData.transactions.map(({ id, customer_id, date, amount }) => new Transaction(id, customer_id, date, amount));
     }
+  }
+
+  filterTransactionsByCustomerId(customerId) {
+    return this.transactions.filter(transaction => transaction.customerId === customerId);
   }
 
   filterTransactions(searchTerm) {
@@ -87,6 +94,7 @@ class UI {
     this.transactionsBody = $('#transactionsBody');
     this.filterInput = $('#filterInput');
     this.ctx = $('#transactionChart')[0].getContext('2d');
+    this.backButton = $('#backButton'); 
 
     this.setupEventListeners();
   }
@@ -104,6 +112,19 @@ class UI {
       this.displayTransactions(filteredTransactions);
       this.updateChart(filteredTransactions);
     });
+
+    this.backButton.on('click', () => {
+      this.displayTransactions(this.dataService.transactions);
+      this.updateChart(this.dataService.transactions);
+      this.backButton.hide(); 
+    });
+  }
+
+  handleCustomerNameClick(customerId) {
+    const customerTransactions = this.dataService.filterTransactionsByCustomerId(customerId);
+    this.displayTransactions(customerTransactions);
+    this.updateChart(customerTransactions);
+    this.backButton.show();
   }
 
   displayTransactions(transactions) {
@@ -112,12 +133,18 @@ class UI {
       const customer = this.dataService.customers.find(c => c.id === customerId);
       const row = `
         <tr>
-          <td>${customer.name}</td>
+          <td><a href="#" class="customer-name" data-customer-id="${customer.id}">${customer.name}</a></td>
           <td>${date}</td>
           <td>${amount}</td>
         </tr>
       `;
       this.transactionsBody.append(row);
+    });
+
+    $('.customer-name').on('click', (event) => {
+      event.preventDefault();
+      const customerId = $(event.target).data('customer-id');
+      this.handleCustomerNameClick(customerId);
     });
   }
 

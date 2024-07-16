@@ -7,6 +7,8 @@ body {
 }
 
 
+
+
 /* START OF LOADER SECTION */
 .main-loader {
   position: fixed;
@@ -111,4 +113,19 @@ h1 {
   100% {
     background: #b22cff;
   }
+}
+
+
+#backButton {
+  display: none; 
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  
 }

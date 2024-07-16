@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="" type="image/x-icon">
   <title>Customer Transactions App</title>
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/style.css">
@@ -47,6 +48,8 @@
       <input type="text" id="filterInput" class="form-control" placeholder="Filter by name or amount">
       <button class="btn btn-primary" type="button">Filter</button>
     </div>
+    <button id="backButton" >Back</button>
+
     <table id="transactionsTable" class="table table-striped table-hover">
       <thead class="table-dark">
         <tr>
@@ -54,10 +57,13 @@
           <th>Date</th>
           <th>Amount</th>
         </tr>
+
       </thead>
       <tbody id="transactionsBody">
       </tbody>
     </table>
+
+
     <div class="chart-container mt-5">
       <canvas id="transactionChart"></canvas>
     </div>
