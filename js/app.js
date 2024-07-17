@@ -46,15 +46,17 @@ class DataService {
         { "id": 9, "customer_id": 5, "date": "2022-01-02", "amount": 875 }
       ]
     };
-
+  
     try {
       const response = await fetch('https://6694c0494bd61d8314c87470.mockapi.io/api/Data/transactions');
       const data = await response.json();
-
-      if (!data.customers || !data.transactions) {
+  
+      console.log('Fetched data:', data); // Debugging line
+  
+      if (!Array.isArray(data.customers) || !Array.isArray(data.transactions)) {
         throw new Error('Invalid API response structure');
       }
-
+  
       this.customers = data.customers.map(({ id, name }) => new Customer(id, name));
       this.transactions = data.transactions.map(({ id, customer_id, date, amount }) => new Transaction(id, customer_id, date, amount));
     } catch (error) {
@@ -63,7 +65,7 @@ class DataService {
       this.transactions = fallbackData.transactions.map(({ id, customer_id, date, amount }) => new Transaction(id, customer_id, date, amount));
     }
   }
-
+  
   filterTransactionsByCustomerId(customerId) {
     return this.transactions.filter(transaction => transaction.customerId === customerId);
   }
