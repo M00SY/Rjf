@@ -51,8 +51,8 @@ class DataService {
       const response = await fetch('https://6694c0494bd61d8314c87470.mockapi.io/api/Data/transactions');
       const data = await response.json();
   
-      console.log('Fetched data:', data); // Debugging line
-  
+      console.log('Fetched data:', data);
+      
       if (!Array.isArray(data.customers) || !Array.isArray(data.transactions)) {
         throw new Error('Invalid API response structure');
       }
